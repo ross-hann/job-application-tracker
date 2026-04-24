@@ -14,12 +14,18 @@ load_dotenv()  # Load environment variables from .env file
     . = current directory
     /jobtracker.db = the name of the database file
 '''
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./jobtracker.db") # If DATABASE_URL isn't in your .env, it defaults to local SQLite
 
-engine = create_engine(
-    DATABASE_URL, 
-    connect_args={"check_same_thread": False}, #sqlite specific argument to allow multiple threads to access the database
-    echo=True)     
+# Render provides postgres:// URLs but SQLAlchemy needs postgresql://
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(
+        DATABASE_URL, 
+        connect_args={"check_same_thread": False}, 
+        echo=True
+    )
+else:
+    # Postgres doesn't need (and won't accept) check_same_thread
+    engine = create_engine(DATABASE_URL, echo=True)    
 
 # Create a configured "Session" class, calling it creates a new session
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine) 

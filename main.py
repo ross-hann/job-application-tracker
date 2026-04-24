@@ -11,16 +11,27 @@ from database import Base, engine, get_db  # Importing the database session help
 from db_models import User, Application  # Importing the User and Application models from the db_models module, which will be used to define the database schema for users and job applications and interact with the database once we implement the database functionality in the API routes
 from schemas import ApplicationModel, ApplicationResponseModel, ApplicationStatus, ApplicationUpdate  # Importing the Pydantic models and enum for application status from the schema module, which will be used for request validation and response serialization in the API routes 
 from routers import auth_router     # Importing the auth router from the routers module, which will be used to handle authentication-related routes such as user registration and login in the API application
-
-# Create tables on startup (safe to run multiple times)
-Base.metadata.create_all(bind=engine)  
+from contextlib import asynccontextmanager
 
 # create an application instance/object    
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: Create tables on startup (safe to run multiple times)
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("Database tables created successfully")
+    except Exception as e:
+        print(f"Warning: Could not create database tables on startup: {e}")
+        print("App will continue running, but database operations may fail")
+    yield
+    # Shutdown: cleanup if needed
+
 app = FastAPI(
     #optional fields for API metadata  
     title="Job Application Tracker API",   
     description="API for managing job applications, allowing users to create, read, update, and delete job applications, as well as filter and search through them based on various criteria.", 
-    version="1.0.0" 
+    version="1.0.0",
+    lifespan=lifespan
 )         
 
 # Register routers for authentication and application management, which will handle the respective API routes for user registration, login, and CRUD operations on job applications in a modular way, keeping the main application file organized and maintainable
