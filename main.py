@@ -78,7 +78,7 @@ def get_applications(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)   # requires valid JWT token for authentication, and retrieves the current authenticated user from the database using the get_current_user dependency, ensuring that only authenticated users can access this route to retrieve a list of applications with optional filtering and pagination
 ):
-    query = Select(Application).where(Application.user == current_user.id)  # Start building the query to select applications that belong to the current authenticated user, ensuring that users can only access their own applications when retrieving a list of applications with optional filtering and pagination
+    query = Select(Application).where(Application.user_id == current_user.id)  # Start building the query to select applications that belong to the current authenticated user, ensuring that users can only access their own applications when retrieving a list of applications with optional filtering and pagination
     if status:
         query = query.where(Application.status == status)
     if company:
@@ -106,15 +106,15 @@ def add_application(application: ApplicationModel,
                     db: Session = Depends(get_db),
                     current_user: User = Depends(get_current_user)):  # The application parameter is expected to be an instance of the ApplicationModel Pydantic model, which will be automatically validated by FastAPI based on the field definitions and constraints specified in the model
     #new_id = max(app["id"] for app in applications_db) + 1
-    new_app = {
-        "company": application.company,
-        "position": application.position,
-        "status": application.status.value,   # Access the value of the ApplicationStatus enum member to store the actual string value in the applications_db, ensuring that the status is stored in a consistent format that can be easily filtered and queried later}
-        "notes": application.notes,
-        "salary": application.salary,
-        "applied_on": str(date.today()),  # Example timestamp for when the application was created, which can be used for tracking and sorting applications based on their creation time in the future when we implement a database and more advanced features
-        "user_id": current_user.id  # Associate the application with the current user
-    }
+    new_app = Application(
+        company=application.company,
+        position=application.position,
+        status=application.status.value,   # Access the value of the ApplicationStatus enum member to store the actual string value in the applications_db, ensuring that the status is stored in a consistent format that can be easily filtered and queried later
+        notes=application.notes,
+        salary=application.salary,
+        applied_on=str(date.today()),  # Example timestamp for when the application was created, which can be used for tracking and sorting applications based on their creation time in the future when we implement a database and more advanced features
+        user_id=current_user.id  # Associate the application with the current user
+    )   
     db.add(new_app)
     db.commit()
     db.refresh(new_app)
