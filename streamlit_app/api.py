@@ -31,7 +31,8 @@ def api_login(email: str, password: str) -> dict | None:
                                  timeout=60
                                  )
         if response.status_code == 200:
-            return response
+            return response.json()
+        st.error(f"Backend Error ({response.status_code}): {response.text}")
         return None
     except requests.RequestException as e:
         st.error(f"Login failed: {e}")

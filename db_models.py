@@ -11,7 +11,7 @@ class User(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, nullable=False)
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
-    password: Mapped[str] = mapped_column(String(100), nullable=False)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
     applications: Mapped[List['Application']] = relationship('Application', back_populates='user') # SQLAlchemy relationship to link User to their Applications 
     
 class Application(Base):

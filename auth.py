@@ -48,7 +48,7 @@ def verify_password(password: str, hashed_password: str) -> bool:
     #return pwd_context.verify(password, hashed_password) # Verify the provided password against the hashed password, returns True if they match, False otherwise
     try:
         return ph.verify(hashed_password, password)
-    except VerifyMismatchError:
+    except (VerifyMismatchError, Exception):
         return False  # Verify the provided password against the hashed password using the Argon2 algorithm, returning True if they match and False if they do not, providing secure authentication in the application
 
 # verifying a JWT token and retrieving the corresponding user from the database, ensuring that only authenticated users can access protected routes in the application
