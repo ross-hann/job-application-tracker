@@ -27,7 +27,7 @@ def api_register(email: str, password: str) -> dict | None:
 def api_login(email: str, password: str) -> dict | None:
     try:
         response = requests.post(f"{API_URL}/auth/login", 
-                                 data={"email": email, "password": password}, 
+                                 data={"username": email, "password": password}, 
                                  timeout=60
                                  )
         if response.status_code == 200:
