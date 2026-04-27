@@ -25,7 +25,9 @@ if DATABASE_URL.startswith("sqlite"):
     )
 else:
     # Postgres doesn't need (and won't accept) check_same_thread
-    engine = create_engine(DATABASE_URL, echo=True)    
+    engine = create_engine(DATABASE_URL, 
+                           connect_args={"sslmode": "require"},
+                           echo=True)    
 
 # Create a configured "Session" class, calling it creates a new session
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine) 

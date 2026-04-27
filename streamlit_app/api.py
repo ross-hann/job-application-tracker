@@ -15,7 +15,7 @@ def api_register(email: str, password: str) -> dict | None:
     try:
         response = requests.post(f"{API_URL}/auth/register", 
                                  json={"email": email, "password": password}, 
-                                 timeout=10
+                                 timeout=60
                                  )
         if response.status_code == 201:
             return response.json()
@@ -28,7 +28,7 @@ def api_login(email: str, password: str) -> dict | None:
     try:
         response = requests.post(f"{API_URL}/auth/login", 
                                  data={"email": email, "password": password}, 
-                                 timeout=10
+                                 timeout=60
                                  )
         if response.status_code == 200:
             return response.json()
@@ -67,7 +67,7 @@ def api_create_application(company: str, position: str, status: str = "Applied",
         response = requests.post(f"{API_URL}/applications", 
                                  headers=get_headers(), 
                                  json=data, 
-                                 timeout=10
+                                 timeout=60
                                  )
         if response.status_code == 201:
             return response.json()
@@ -85,7 +85,7 @@ def api_update_application(app_id: int, new_status: str, new_notes: str) -> dict
         response = requests.patch(f"{API_URL}/applications/{app_id}", 
                                 headers=get_headers(), 
                                 json=data, 
-                                timeout=10
+                                timeout=60
                                 )
         if response.status_code == 200:
             return response.json()
@@ -98,7 +98,7 @@ def api_delete_application(app_id: int) -> bool:
     try:
         response = requests.delete(f"{API_URL}/applications/{app_id}", 
                                    headers=get_headers(), 
-                                   timeout=10
+                                   timeout=60
                                    )
         return response.status_code == 204
     except requests.RequestException as e:
