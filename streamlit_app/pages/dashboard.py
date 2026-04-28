@@ -43,6 +43,8 @@ st.markdown("""
     color: white;
 }
 .header-banner h1 {
+    display: flex;
+    align-items: center;
     margin: 0 0 0.3rem 0;
     font-size: 2.2rem;
     font-weight: 800;
@@ -123,7 +125,9 @@ st.markdown("""
 
 /* Section headers */
 .section-header {
-    font-size: 1rem;
+    display: flex;
+    align-items: center;      
+    font-size: 2rem;
     font-weight: 700;
     color: #CBD5E1;
     text-transform: uppercase;
@@ -169,17 +173,18 @@ def show_dashboard():
         with col:
             st.markdown(f"""
             <div class="metric-card">
-                <div class="num" style="color:{color}">{num}</div>
                 <div class="label">{label}</div>
+                <div class="num" style="color:{color}; text-align: center;">{num}</div>
+                <p></p>
             </div>""", unsafe_allow_html=True)
 
     # ── Add New Application ────────────────────────────────────────────────────
-    st.markdown('<div class="section-header">➕ Add New Application</div>', unsafe_allow_html=True)
-    with st.expander("Open form", expanded=False):
+    st.markdown('<div class="section-header"><p> </p></div>', unsafe_allow_html=True)
+    with st.expander("➕ Add New Application", expanded=False):
         with st.form("add_app_form", clear_on_submit=True):
             c1, c2 = st.columns(2)
-            company  = c1.text_input("Company",  placeholder="e.g. Google")
-            position = c2.text_input("Position", placeholder="e.g. Software Engineer")
+            company  = c1.text_input("Company")
+            position = c2.text_input("Position")
             c3, c4 = st.columns(2)
             status = c3.selectbox("Status", STATUS_OPTIONS)
             salary = c4.text_input("Salary", placeholder="optional")
@@ -200,14 +205,15 @@ def show_dashboard():
 
     # ── Applications table ─────────────────────────────────────────────────────
     st.markdown('<div class="section-header">📋 Your Applications</div>', unsafe_allow_html=True)
+    st.divider()
 
     if not applications:
         st.info("No applications yet — add your first one above!")
         return
 
     # Column headers
-    hcols = st.columns([2.5, 2, 1.5, 1.2, 0.8, 0.8])
-    for col, label in zip(hcols, ["Company", "Position", "Status", "Date Applied", "Edit", "Delete"]):
+    hcols = st.columns([2.5, 2, 2, 1.5, 1.2, 0.8, 0.8])
+    for col, label in zip(hcols, ["Company", "Position", "Salary", "Status", "Date Applied", "Edit", "Delete"]):
         col.markdown(f"**{label}**")
     st.divider()
 
@@ -217,17 +223,17 @@ def show_dashboard():
         badge_color = STATUS_COLOR.get(status_val, "#6366F1")
         date_str = app.get("date_applied", "—")[:10] if app.get("date_applied") else "—"
 
-        row = st.columns([2.5, 2, 1.5, 1.2, 0.8, 0.8])
-        row[0].markdown(f"**{app.get('company', '—')}**")
+        row = st.columns([2.5, 2, 2, 1.5, 1.2, 0.8, 0.8])
+        row[0].markdown(f"{app.get('company', '—')}")
         row[1].markdown(app.get("position", "—"))
-        row[2].markdown(
-            f'<span class="badge" style="background:{badge_color}">'
+        row[2].markdown(app.get("salary", "—"))
+        row[3].markdown(
             f'{STATUS_EMOJI.get(status_val,"")} {status_val}</span>',
             unsafe_allow_html=True
         )
-        row[3].markdown(date_str)
-        edit_btn   = row[4].button("✏️", key=f"edit_{idx}",   help="Edit",   use_container_width=True)
-        delete_btn = row[5].button("🗑️", key=f"delete_{idx}", help="Delete", use_container_width=True)
+        row[4].markdown(date_str)
+        edit_btn   = row[5].button("✏️", key=f"edit_{idx}",   help="Edit",   use_container_width=True)
+        delete_btn = row[6].button("🗑️", key=f"delete_{idx}", help="Delete", use_container_width=True)
 
         # ── Edit form (inline expander below the row) ──────────────────────────
         if edit_btn:
