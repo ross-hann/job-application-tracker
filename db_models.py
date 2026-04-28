@@ -17,7 +17,7 @@ class User(Base):
 class Application(Base):
     __tablename__ = 'applications'
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, nullable=False) # primary key (auto increment & must be unique) indexed for faster queries
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, index=True, nullable=False) # primary key (auto increment & must be unique) indexed for faster queries
     company: Mapped[str] = mapped_column(String(100), nullable=False)
     position: Mapped[str] = mapped_column(String(50), nullable=False)
     status: Mapped[str] = mapped_column(String(50), default = 'Applied')
