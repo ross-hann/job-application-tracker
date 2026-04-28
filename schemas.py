@@ -38,7 +38,7 @@ class ApplicationModel(BaseModel):
     status: Optional[ApplicationStatus] = Field(ApplicationStatus.APPLIED, description="The current status of the application", example=ApplicationStatus.APPLIED)  # status of the application, which is optional and defaults to "Applied" if not provided
     notes: Optional[str] = Field(None, example="Applied through referral")  
     salary: Optional[float] = Field(None, example=120000.00, gt=0)  # a validation rule to ensure that the salary is greater than 0
-    date_applied: Optional[str] = Field(None, example="2024-06-01")  # Optional field for the date the application was submitted, with an example value in YYYY-MM-DD format for documentation purposes
+    date_applied: Optional[date] = Field(None, example="2024-06-01")  # Optional field for the date the application was submitted, with an example value in YYYY-MM-DD format for documentation purposes
 
 @field_validator("company", "position")  # Define a field validator for the company and position fields to ensure that they are not empty or just whitespace, providing additional validation beyond the basic string type and length constraints defined in the Field metadata
 def not_empty(cls, value):
