@@ -47,7 +47,7 @@ def api_get_applications(status: str = None) -> list[dict] | None:
         response = requests.get(f"{API_URL}/applications", 
                                 headers=get_headers(), 
                                 params=params, 
-                                timeout=10
+                                timeout=60
                                 )
         if response.status_code == 200:
             return response.json()
