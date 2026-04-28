@@ -37,4 +37,4 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
         raise HTTPException(status_code=401, detail="Invalid email or password")
     # Create an access token
     access_token = create_access_token(db_user.id)
-    return TokenResponse(access_token=access_token)
+    return TokenResponse(access_token=access_token, token_type="bearer")
