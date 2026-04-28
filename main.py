@@ -112,7 +112,7 @@ def add_application(application: ApplicationModel,
         status=application.status.value,   # Access the value of the ApplicationStatus enum member to store the actual string value in the applications_db, ensuring that the status is stored in a consistent format that can be easily filtered and queried later
         notes=application.notes,
         salary=application.salary,
-        applied_on=str(date.today()),  # Example timestamp for when the application was created, which can be used for tracking and sorting applications based on their creation time in the future when we implement a database and more advanced features
+        date_applied=str(date.today()),  # Example timestamp for when the application was created, which can be used for tracking and sorting applications based on their creation time in the future when we implement a database and more advanced features
         user_id=current_user.id  # Associate the application with the current user
     )   
     db.add(new_app)
