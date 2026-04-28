@@ -1,5 +1,6 @@
 # schemas.py
 
+from dateime import date
 from typing import Optional
 from enum import Enum
 from pydantic import BaseModel, Field, field_validator, ConfigDict, EmailStr
@@ -59,5 +60,5 @@ class ApplicationResponseModel(ApplicationModel):  # Define a Pydantic model for
     status: ApplicationStatus 
     notes: Optional[str] = None
     salary: Optional[float] = None
-    date_applied: Optional[str] = None
+    date_applied: Optional[date] = None
     model_config = ConfigDict(from_attributes=True)    # allows the model to be created from an object with attributes (e.g., an instance of the Application dataclass) rather than just from a dictionary, enabling seamless conversion between the dataclass instances and the Pydantic models for request validation and response serialization
