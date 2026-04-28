@@ -1,6 +1,6 @@
 # schemas.py
 
-from dateime import date
+from datetime import date
 from typing import Optional
 from enum import Enum
 from pydantic import BaseModel, Field, field_validator, ConfigDict, EmailStr
