@@ -101,7 +101,7 @@ def api_delete_application(app_id: int) -> bool:
                                    headers=get_headers(), 
                                    timeout=60
                                    )
-        return response.status_code == 204
+        return response.status_code in (200, 204)
     except requests.RequestException as e:
         st.error(f"Failed to delete application: {e}")
         return False

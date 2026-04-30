@@ -22,9 +22,6 @@ st.set_page_config(page_title="Job Tracker", layout="centered")
 # ── Hide sidebar + global styles ───────────────────────────────────────────────
 st.markdown("""
 <style>
-/* Hide sidebar entirely */
-[data-testid="stSidebar"] { display: none !important; }
-[data-testid="collapsedControl"] { display: none !important; }
 
 /* Center the whole app */
 .block-container {
@@ -37,7 +34,9 @@ st.markdown("""
 .header-banner {
     background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
     display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     border-radius: 16px;
     padding: 2rem 2.5rem;
     margin-bottom: 1.8rem;
@@ -46,12 +45,16 @@ st.markdown("""
 }
 .header-banner h1 {
     margin: 0 0 0.3rem 0;
+    display: flex;
+    align-items: center;
     font-size: 2.2rem;
     font-weight: 800;
     letter-spacing: -0.5px;
 }
 .header-banner p {
     margin: 0;
+    display: flex;
+    align-items: center;
     font-size: 1rem;
     opacity: 0.88;
 }
@@ -146,17 +149,16 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-
 def show_dashboard():
     user_email = st.session_state.user["email"]
 
     # ── Header banner ──────────────────────────────────────────────────────────
     st.markdown(f"""
     <div class="header-banner">
-        <h1>🎯 Job Tracker</h1>
-        <p>Welcome back, <strong>{user_email}</strong></p>
-    </div>
-    """, unsafe_allow_html=True)
+        <h1 style="text-align: center;">🎯 Job Tracker</h1>
+        <p style="text-align: center;">Welcome back, <strong>{user_email}</strong></p>
+    </div>""", unsafe_allow_html=True)
+    st.divider()
 
     # ── Fetch applications ─────────────────────────────────────────────────────
     applications = api_get_applications() or []
@@ -173,13 +175,13 @@ def show_dashboard():
         with col:
             st.markdown(f"""
             <div class="metric-card">
-                <div class="label">{label}</div>
+                <div class="label" style="text-align: center;">{label}</div>
                 <div class="num" style="color:{color}; text-align: center;">{num}</div>
                 <p></p>
             </div>""", unsafe_allow_html=True)
 
     # ── Add New Application ────────────────────────────────────────────────────
-    st.markdown('<div class="section-header"><p> </p></div>', unsafe_allow_html=True)
+    st.markdown(f"""<div class="section-header"><p> </p></div>""", unsafe_allow_html=True)
     with st.expander("➕ Add New Application", expanded=False):
         with st.form("add_app_form", clear_on_submit=True):
             c1, c2 = st.columns(2)
@@ -204,7 +206,8 @@ def show_dashboard():
                     st.error("Failed to add application. Please try again.")
 
     # ── Applications table ─────────────────────────────────────────────────────
-    st.markdown('<div class="section-header">📋 Your Applications</div>', unsafe_allow_html=True)
+    
+    st.markdown(f"""<h3 class="section-header" style="text-align: center;">📋 Your Applications</h3>""", unsafe_allow_html=True)
     st.divider()
 
     if not applications:
@@ -253,7 +256,7 @@ def show_dashboard():
 
                 if save_btn:
                     with st.spinner("Updating..."):
-                        updated = api_update_application(app["id"], new_status, new_notes)
+                        updated = api_update_application(app['id'], new_status, new_notes)
                     if updated:
                         st.success("Updated!")
                         st.session_state[f"editing_{idx}"] = False
@@ -273,7 +276,7 @@ def show_dashboard():
             dc1, dc2 = st.columns(2)
             if dc1.button("Yes, delete", key=f"confirm_yes_{idx}", use_container_width=True):
                 with st.spinner("Deleting..."):
-                    api_delete_application(app["id"])
+                    api_delete_application(app['id'])
                 st.session_state[f"confirm_delete_{idx}"] = False
                 st.rerun()
             if dc2.button("Cancel", key=f"confirm_no_{idx}", use_container_width=True):

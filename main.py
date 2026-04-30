@@ -130,9 +130,12 @@ def update_application_status(app_id: int,
     existing_app = db.get(Application, app_id)  # Use the database session to retrieve the existing application from the database by its ID, or raise a 404 Not Found HTTP exception if the application is not found
     if not existing_app:
         raise HTTPException(status_code=404, detail="Application not found")
+    if not existing_app.user_id == current_user.id:
+        raise HTTPException(status_code=403, details="Unauthorized user")
     for field, value in application.dict(exclude_unset=True).items():  # Iterate through the fields and values of the incoming application data, excluding any fields that were not set in the request (i.e., only include fields that were provided in the update request), allowing for partial updates to the application data
         if value is not None:  # Check if the value is not None before updating the existing application, ensuring that only fields with provided values are updated and preventing unintended overwriting of existing data with None values
-            existing_app[field] = value.value if isinstance(value, Enum) else value  # Update the existing application with the new value, checking if the value is an instance of an Enum (e.g., ApplicationStatus) and accessing its actual value if it is, to ensure that the status is stored in a consistent format that can be easily filtered and queried later when we implement a database and more advanced features      
+            final_value = value.value if hasattr(value, 'value') else value
+            setattr(existing_app, field, final_value)
     db.commit()
     db.refresh(existing_app)
     return existing_app  # Return the updated application data, which will be filtered through the ApplicationResponseModel Pydantic model to ensure that the response adheres to the defined schema and includes only the fields specified in the model, providing a consistent and structured format for the API responses when updating an application's status or other fields
@@ -145,7 +148,7 @@ def delete_application(app_id: int,
     app = db.get(Application, app_id)  # Use the database session to retrieve the application from the database by its ID, or raise a 404 Not Found HTTP exception if the application is not found
     if not app:
         raise HTTPException(status_code=404, detail="Application not found")
-    if not app.user == current_user.id:
+    if not app.user_id == current_user.id:
         raise HTTPException(status_code=403, detail="You are not the owner of this application")
     db.delete(app)
     db.commit()

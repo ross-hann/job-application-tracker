@@ -50,7 +50,6 @@ def not_empty(cls, value):
 class ApplicationUpdate(BaseModel):  # Define a Pydantic model for updating an application, which allows for partial updates to the application data when updating the status or other fields of an existing application
     status: Optional[ApplicationStatus] = Field(None, description="The new status of the application", example=ApplicationStatus.INTERVIEW)  # Optional field for updating the status of the application, with a description and example value for documentation purposes
     notes: Optional[str] = Field(None, example="Updated notes about the application")  
-    salary: Optional[float] = Field(None, example=130000.00, gt=0)  # validation rule to ensure that the salary is greater than 0
 
 # OUTPUT schema — what the API returns in the response body, which includes all the fields from the input schema plus an additional id field to uniquely identify each application
 class ApplicationResponseModel(ApplicationModel):  # Define a Pydantic model for the response when retrieving job applications, which extends the ApplicationModel to include an additional id field for uniquely identifying each application
