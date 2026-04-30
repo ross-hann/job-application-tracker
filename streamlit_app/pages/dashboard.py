@@ -36,6 +36,8 @@ st.markdown("""
 /* Gradient header banner */
 .header-banner {
     background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
+    display: flex;
+    align-items: center;
     border-radius: 16px;
     padding: 2rem 2.5rem;
     margin-bottom: 1.8rem;
@@ -43,8 +45,6 @@ st.markdown("""
     color: white;
 }
 .header-banner h1 {
-    display: flex;
-    align-items: center;
     margin: 0 0 0.3rem 0;
     font-size: 2.2rem;
     font-weight: 800;
@@ -132,7 +132,7 @@ st.markdown("""
     color: #CBD5E1;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    margin: 1.5rem 0 0.75rem 0;
+    margin: 3.5rem 0 0.75rem 0;
     border-bottom: 1px solid #334155;
     padding-bottom: 0.5rem;
 }
@@ -212,7 +212,7 @@ def show_dashboard():
         return
 
     # Column headers
-    hcols = st.columns([2.5, 2, 2, 1.5, 1.2, 0.8, 0.8])
+    hcols = st.columns([2, 2, 2, 1.5, 1.8, 1, 1])
     for col, label in zip(hcols, ["Company", "Position", "Salary", "Status", "Date Applied", "Edit", "Delete"]):
         col.markdown(f"**{label}**")
     st.divider()
@@ -223,7 +223,7 @@ def show_dashboard():
         badge_color = STATUS_COLOR.get(status_val, "#6366F1")
         date_str = app.get("date_applied", "—")[:10] if app.get("date_applied") else "—"
 
-        row = st.columns([2.5, 2, 2, 1.5, 1.2, 0.8, 0.8])
+        row = st.columns([2, 2, 2, 1.5, 1.8, 1, 1])
         row[0].markdown(f"{app.get('company', '—')}")
         row[1].markdown(app.get("position", "—"))
         row[2].markdown(app.get("salary", "—"))
